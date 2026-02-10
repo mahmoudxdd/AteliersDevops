@@ -1,19 +1,28 @@
-
 pipeline {
     agent any
+
     tools {
-        maven "M2_HOME"
-        jdk "JAVA_HOME"
+        jdk 'JAVA_HOME'
+        maven 'M2_HOME'
     }
+
     stages {
-        stage('Checkout') {
+
+        stage('Verify tools') {
             steps {
-                git branch: 'main', url: 'https://github.com/mahmoudxdd/AteliersDevops.git'
+                sh '''
+                    echo "JAVA VERSION:"
+                    java -version
+                    echo "MAVEN VERSION:"
+                    mvn -version
+                '''
             }
         }
+
         stage('Build') {
             steps {
-                sh "mvn clean package -Dmaven.test.skip=true"            }
+                sh 'mvn -B -ntp -DskipTests clean package'
+            }
         }
     }
 }

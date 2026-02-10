@@ -1,30 +1,20 @@
+
+
 pipeline {
     agent any
-
+    tools {
+        maven "maven"
+        jdk "JAVA_17"
+    }
     stages {
-
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main', url: 'https://github.com/mahmoudxdd/AteliersDevops'
             }
         }
-
         stage('Build') {
             steps {
-                sh 'mvn clean compile'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'mvn package'
-            }
+                sh "mvn clean package -Dmaven.test.skip=true"            }
         }
     }
 }

@@ -1,26 +1,18 @@
 pipeline {
-  agent any
-  environment {
-    MAVEN_OPTS = "-Dmaven.repo.local=/var/lib/jenkins/.m2/repository"
-  }
-  stages {
-    stage('Verify tools') {
-      steps {
-        sh '''
-          java -version
-          mvn -version
-        '''
-      }
+    agent any
+    tools {
+        maven "M2_HOME"
+        jdk "JAVA_HOME"
     }
-    stage('Build') {
-      steps {
-        sh 'mvn -B -ntp -DskipTests clean package'
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/mahmoudxdd/AteliersDevops.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "mvn clean package -Dmaven.test.skip=true"            }
+        }
     }
-  }
-  post {
-    success {
-      archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-    }
-  }
 }

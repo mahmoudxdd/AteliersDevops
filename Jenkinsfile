@@ -1,28 +1,19 @@
 
 pipeline {
-  agent any
-
-  options {
-    timeout(time: 20, unit: 'MINUTES')
-    timestamps()
-  }
-
-  tools {
-    maven 'M2_HOME'   
-    jdk 'JAVA_HOME'      
-  }
-
-  stages {
-    stage('Checkout') {
-      steps {
-        git branch: 'main', url: 'https://github.com/mahmoudxdd/AteliersDevops.git'
-      }
+    agent any
+    tools {
+        maven "M2_HOME"
+        jdk "JAVA_HOME"
     }
-
-    stage('Build') {
-      steps {
-        sh 'mvn -B -U clean package -DskipTests'
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/BederSaad/devops.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh "mvn clean package -Dmaven.test.skip=true"            }
+        }
     }
-  }
 }

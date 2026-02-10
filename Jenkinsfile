@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/mahmoudxdd/AteliersDevops'
+                git branch: 'main', url: 'https://github.com/mahmoudxdd/AteliersDevops.git'
             }
         }
         stage('Build') {

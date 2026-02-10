@@ -1,41 +1,30 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven'  
-        jdk 'Java'
-    }
-
     stages {
 
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                echo "Cloning GitHub project..."
-                git branch: 'main', url: 'https://github.com/mahmoudxdd/AteliersDevops'
+                checkout scm
             }
         }
 
-        stage('Build Project') {
+        stage('Build') {
             steps {
-                echo "Building Java project..."
-                sh 'mvn clean package'
+                sh 'mvn clean compile'
             }
         }
 
-        stage('Run Application') {
+        stage('Test') {
             steps {
-                echo "Running Java application..."
-                sh 'java -jar target/*.jar'
+                sh 'mvn test'
             }
         }
-    }
 
-    post {
-        success {
-            echo " Project executed successfully!"
-        }
-        failure {
-            echo " Build failed!"
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
         }
     }
 }

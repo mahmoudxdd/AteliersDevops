@@ -1,41 +1,13 @@
-
-
 pipeline {
-    agent any
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Récupération du code depuis GitHub...'
-                git branch: 'main', url: 'https://github.com/mahmoudxdd/AteliersDevops.git'
-            }
-        }
-        
-        stage('Build') {
-            steps {
-                echo 'Construction du projet avec Maven Wrapper...'
-                sh 'chmod +x mvnw'
-                sh './mvnw clean package -DskipTests'
-            }
-        }
-        
-        stage('Archive') {
-            steps {
-                echo 'Archivage de l\'artifact...'
-                archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
-            }
-        }
+  agent any
+  environment {
+    MAVEN_OPTS = "-Dmaven.repo.local=/var/lib/jenkins/.m2/repository"
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn -B -DskipTests clean package'
+      }
     }
-    
-    post {
-        success {
-            echo 'Pipeline exécuté avec succès! ✅'
-        }
-        failure {
-            echo 'Le pipeline a échoué. ❌'
-        }
-        always {
-            echo 'Build terminé.'
-        }
-    }
+  }
 }

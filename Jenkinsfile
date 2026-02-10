@@ -1,28 +1,28 @@
 pipeline {
-    agent any
+  agent any
 
-    tools {
-        jdk 'JAVA_HOME'
-        maven 'M2_HOME'
+  options {
+    timestamps()
+    timeout(time: 30, unit: 'MINUTES')
+  }
+
+  stages {
+    stage('Verify tools') {
+      steps {
+        sh '''
+          set -x
+          which java || true
+          java -version
+          which mvn || true
+          mvn -version
+        '''
+      }
     }
 
-    stages {
-
-        stage('Verify tools') {
-            steps {
-                sh '''
-                    echo "JAVA VERSION:"
-                    java -version
-                    echo "MAVEN VERSION:"
-                    mvn -version
-                '''
-            }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'mvn -B -ntp -DskipTests clean package'
-            }
-        }
+    stage('Build') {
+      steps {
+        sh 'mvn -B -DskipTests clean package'
+      }
     }
+  }
 }
